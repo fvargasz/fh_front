@@ -41,7 +41,7 @@ function handleSearch() {
             <button
             v-for="tab in tripItems"
             :key="tab.value"
-            :class="['px-4 py-2 rounded', { 'bg-blue-500 text-white': tripType === tab.value, 'bg-gray-200': tripType !== tab.value }]"
+            :class="['px-4 py-2 rounded', { 'bg-blue-500 text-white': tripType === tab.value, 'bg-gray-300': tripType !== tab.value }]"
             @click="tripType = tab.value"
             >
             {{ tab.label }}
