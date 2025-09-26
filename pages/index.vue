@@ -37,7 +37,7 @@
             
           </div>
           <div v-else>
-              <div class="flex justify-center flex-col items-center">
+            <div class="flex justify-center flex-col items-center">
               <h2 class="text-cloud-white text-xl mb-4">Connection Error</h2>
               <p class="text-cloud-white/80 mb-4">Unable to connect to the database. Please check your connection.</p>
               <button 
@@ -48,7 +48,7 @@
               </button>
             </div>
           </div>
-          <div class="pt-6 flex flex-col items-center gap-4">
+          <div v-if="isLoggedIn" class="pt-6 flex flex-col items-center gap-4">
             <h2 class="text-xl md:text-2xl font-semibold text-cloud-white">
               Want to check your trips?
             </h2>

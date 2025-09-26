@@ -108,7 +108,7 @@
                 v-model="registerForm.name"
                 type="text"
                 placeholder="Enter your full name"
-                class="w-full px-3 py-2 bg-gray-50/50 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                class="text-black w-full px-3 py-2 bg-gray-50/50 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
             <div class="space-y-2">

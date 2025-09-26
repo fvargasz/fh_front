@@ -1,5 +1,11 @@
 <template>
   <div class="w-full max-w-6xl mx-auto space-y-8" v-if="airports && airports.length > 0">
+    <div v-if="transactionAdded" class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg" role="alert">
+      <span class="font-medium">Success!</span> Your trip has been added successfully.
+    </div>
+    <div v-if="errorMessage" class="p-4 my-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
+      <span class="font-medium">{{ errorMessage }}</span>
+    </div>
     <div class="p-8 
     rounded-md
     bg-[linear-gradient(145deg,hsl(0_0%_100%/.9),hsl(0_0%_100%/.7))]
@@ -136,7 +142,12 @@
   </div>
 
   
-  <div v-if="showTrips" class="w-full max-w-6xl mx-auto mt-8">
+    <div v-if="userTriedToBook && !isLoggedIn" class="p-4 my-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
+      <span class="font-medium">Please log in or create an account to book a trip.</span>
+    </div>
+
+  <!-- Display flight options -->
+  <div v-if="showTrips" class="w-full max-w-6xl mx-auto mt-4">
     <div v-if="flights && flights.length > 0" class="p-4 mt-4
       bg-white/60
       backdrop-blur-sm rounded-md
@@ -194,6 +205,10 @@ const departureAirport = ref();
 const arrivalAirport = ref();
 const airports = ref<Airport[]>([]);
 const showTrips = ref(false);
+const transactionAdded = ref(false);
+const { user, isLoggedIn } = useAuth();
+const userTriedToBook = ref(false);
+const errorMessage = ref('');
 
 // tabs
 const tripType = ref<'one_way' | 'round_trip'>('round_trip')
@@ -232,9 +247,9 @@ const searchData = reactive({
 
 // methods
 async function handleSearch()  {
-
   flights.value = [];
   tripOptions.value = [];
+  transactionAdded.value = false;
 
   const body = {
     departure_airport_id: departureAirport.value?.id,
@@ -256,11 +271,12 @@ async function handleSearch()  {
     }
     showTrips.value = true;
   } catch (error) {
-    
+    errorMessage.value = 'Error fetching flights. Please try again.';
   }
   
 }
 
+// Handles
 const handleDepartureChange = () => {
   if (searchData.from) {
     const selectedAirport = airports.value.find(airport => airport.code === searchData.from);
@@ -271,7 +287,6 @@ const handleDepartureChange = () => {
   }
 };
 
-// Handle arrival airport selection
 const handleArrivalChange = () => {
   if (searchData.to) {
     const selectedAirport = airports.value.find(airport => airport.code === searchData.to);
@@ -298,20 +313,29 @@ function setTripType(type: 'one_way' | 'round_trip') {
   tripType.value = type;
   flights.value = [];
   tripOptions.value = [];
+  userTriedToBook.value = false;
+  showTrips.value = false;
+  searchData.returnDate = '';
+  errorMessage.value = '';
 }
 
 const onSelectPressed = async (trip: any) => {
-  var body: any = {};
+  
+  if (!isLoggedIn.value) {
+      userTriedToBook.value = true;
+      return;
+  }
+    var body: any = {};
 
   const formatDate = (date: any) => {
-  if (date instanceof Date) {
-    return date.toISOString().split('T')[0]; // YYYY-MM-DD
-  }
-  if (typeof date === 'string') {
-    return new Date(date).toISOString().split('T')[0];
-  }
-  return date;
-};
+    if (date instanceof Date) {
+        return date.toISOString().split('T')[0]; // YYYY-MM-DD
+    }
+    if (typeof date === 'string') {
+      return new Date(date).toISOString().split('T')[0];
+    }
+    return date;
+  };
   
   if (tripType.value === 'round_trip') {
     const tripToStore = trip as TripOption;
@@ -337,7 +361,6 @@ const onSelectPressed = async (trip: any) => {
       ]
     }
   } else {
-    console.log('Creating one_way trip for flight:', trip.departure_airport);
     body = {
       trip_type: "one_way", 
       origin_airport_id: trip.departure_airport.id, 
@@ -355,11 +378,24 @@ const onSelectPressed = async (trip: any) => {
   }
   
   try {
-    console.log('Request body:', body); 
     const result = await createTrip(body);
-    console.log('Trip created successfully:', result);
+    clearFields();
   } catch (error) {
+    errorMessage.value = 'Error fetching flights. Please try agaddfain.';
     console.error('Error creating trip:', error);
   }
+}
+
+function clearFields() {
+  transactionAdded.value = true;
+  flights.value = [];
+  tripOptions.value = [];
+  errorMessage.value = '';
+  showTrips.value = false;
+  searchData.from = '';
+  searchData.to = '';
+  searchData.departDate = '';
+  searchData.returnDate = '';
+  searchData.passengers = 1;
 }
 </script>
