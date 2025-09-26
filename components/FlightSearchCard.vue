@@ -177,7 +177,8 @@
       <p>{{getTripType()}}</p>
     </div>
     <div v-for="flight in flights" class="flex flex-col">
-      <FlightInfoCard v-if="tripType === 'one-way'" :outBoundFlight="flight" :trip-type="tripType"/>
+      <FlightInfoCard v-if="tripType === 'one-way'" :outBoundFlight="flight" :trip-type="tripType"
+      :onClick="data => onSelectPressed(data)"/>
     </div>
   </div>
   <div v-else-if="tripOptions && tripOptions.length > 0" class="p-4 mt-4
@@ -189,7 +190,11 @@
       <p>{{getTripType()}}</p>
     </div>
     <div v-for="option in tripOptions" class="flex flex-col">
-      <FlightInfoCard v-if="tripType === 'round-trip'" :outBoundFlight="option.outbound" :return-flight="option.return" :trip-type="tripType"/>
+      <FlightInfoCard v-if="tripType === 'round-trip'" 
+      :outBoundFlight="option.outbound" 
+      :return-flight="option.return" 
+      :trip-type="tripType"
+      :onClick="data => onSelectPressed(data)"/>
     </div>
   </div>
 </template>
@@ -198,6 +203,7 @@
 import { ref } from 'vue'
 import { fetchAirports } from '~/services/airports';
 import { fetchFlights } from '~/services/flight';
+import { createTrip } from '~/services/Trips';
 import type { Airport } from '~/types/airport';
 import type { Flight } from '~/types/flight';
 import type { TripOption } from '~/types/TripOption';
@@ -301,5 +307,68 @@ function setTripType(type: 'one-way' | 'round-trip') {
   tripType.value = type;
   flights.value = [];
   tripOptions.value = [];
+}
+
+const onSelectPressed = async (trip: any) => {
+  var body: any = {};
+
+  const formatDate = (date: any) => {
+  if (date instanceof Date) {
+    return date.toISOString().split('T')[0]; // YYYY-MM-DD
+  }
+  if (typeof date === 'string') {
+    return new Date(date).toISOString().split('T')[0];
+  }
+  return date;
+};
+  
+  if (tripType.value === 'round-trip') {
+    const tripToStore = trip as TripOption;
+    body = {
+      trip_type: "round_trip", 
+      origin_airport_id: tripToStore.outbound.departure_airport.id,
+      destination_airport_id: tripToStore.return.arrival_airport.id,
+      segments: [
+        {
+          flight_id: tripToStore.outbound.id,
+          flight_date: formatDate(searchData.departDate),
+          segment_order: 1,
+          segment_type: 'outbound',
+          price: parseFloat(tripToStore.outbound.price),
+        },
+        {
+          flight_id: tripToStore.return.id,
+          flight_date: formatDate(searchData.returnDate),
+          segment_order: 2,
+          segment_type: 'return',
+          price: parseFloat(tripToStore.return.price),
+        }
+      ]
+    }
+  } else {
+    console.log('Creating one-way trip for flight:', trip.departure_airport);
+    body = {
+      trip_type: "one_way", 
+      origin_airport_id: trip.departure_airport.id, 
+      destination_airport_id: trip.arrival_airport.id, 
+      segments: [
+        {
+          flight_id: trip.id, 
+          flight_date: formatDate(searchData.departDate),
+          segment_order: 1,
+          segment_type: 'outbound',
+          price: parseFloat(trip.price), 
+        }
+      ]
+    }
+  }
+  
+  try {
+    console.log('Request body:', body); 
+    const result = await createTrip(body);
+    console.log('Trip created successfully:', result);
+  } catch (error) {
+    console.error('Error creating trip:', error);
+  }
 }
 </script>

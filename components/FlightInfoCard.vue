@@ -103,10 +103,11 @@
 <script setup lang="ts">
 import type { Flight } from '../types/flight';
 
-defineProps<{
+const props = defineProps<{
     outBoundFlight: Flight,
     returnFlight?: Flight,
-    tripType: string
+    tripType: string,
+    onClick?: (data: Flight | any) => Promise<void>
 }>()
 
 const duration = (flight: Flight): string => {
@@ -129,7 +130,16 @@ const duration = (flight: Flight): string => {
 };
 
 const onsubmit = () => {
-  
+    if (props.onClick) { 
+        if (props.tripType === 'one-way') {
+            props.onClick(props.outBoundFlight);
+        } else if (props.tripType === 'round-trip') {
+            props.onClick({ 
+                outbound: props.outBoundFlight, 
+                return: props.returnFlight 
+            });
+        }
+    }
 }
 
 </script>
