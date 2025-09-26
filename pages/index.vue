@@ -1,9 +1,6 @@
-<script setup lang="ts">
-
-</script>
 
 <template>
-  <div class="bg-[url('/landingImg.jpg')] bg-cover bg-center bg-no-repeat min-h-screen">
+  <div class="bg-[url('/landingImg.jpg')] bg-cover bg-center bg-scroll bg-no-repeat min-h-screen">
     <div class="sticky inset-0 bg-sky-primary/15"></div>
     <BaseHeader/>
     <main class="flex-1 flex items-center justify-center px-4 py-12 z-10">
@@ -36,10 +33,17 @@
           </div>
 
           <div class="pt-8">
-            <FlightSearchCard />
+            <FlightSearchCard v-if="isInitialized" />
           </div>
         </div>
       </div>
     </main>
   </div>
 </template>
+
+<script setup lang="ts">
+  const { user, isLoggedIn, isInitialized, initializeAuth } = useAuth();
+
+  const authPromise = initializeAuth();
+
+</script>
