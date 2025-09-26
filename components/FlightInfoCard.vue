@@ -43,7 +43,7 @@
                 </div>
             </div>
             <!-- Round-trip -->
-            <div v-if="tripType === 'round-trip' && returnFlight" >
+            <div v-if="tripType === 'round_trip' && returnFlight" >
                 <div class="flex flex-row space-x-3 py-2 items-center">
                 <div class="bg-blue-600 rounded-full aspect-square w-8 h-8 flex items-center justify-center">
                     <h1 class="text-white text-center text-sm font-semibold">{{outBoundFlight.airline.code }}</h1>
@@ -86,9 +86,10 @@
         <div class="flex flex-col text-right ml-6 justify-center">
             <div class="mb-4">
                 <p class="text-3xl font-bold text-sky-primary">{{ returnFlight ? (+outBoundFlight.price + +returnFlight.price) : +outBoundFlight.price }}</p>
-                <p class="text-sm text-muted-foreground">per person</p>
+                <p class="text-sm text-muted-foreground">{{ !ownedFlight ? 'per person' : 'total'}}</p>
             </div>
             <Button 
+            v-if="!ownedFlight"
             @click="onsubmit"
             class=" px-6 py-3 rounded-lg text-white font-medium flex items-center justify-center
                 bg-gradient-to-r from-sky-500 to-indigo-600
@@ -103,12 +104,15 @@
 <script setup lang="ts">
 import type { Flight } from '../types/flight';
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
     outBoundFlight: Flight,
     returnFlight?: Flight,
     tripType: string,
-    onClick?: (data: Flight | any) => Promise<void>
-}>()
+    ownedFlight: boolean,
+    onClick?: (data: Flight | any) => Promise<void>,
+}>(), {
+    ownedFlight: false,
+})
 
 const duration = (flight: Flight): string => {
   const [startH, startM] = flight.departure_time.split(":").map(Number);
@@ -131,9 +135,9 @@ const duration = (flight: Flight): string => {
 
 const onsubmit = () => {
     if (props.onClick) { 
-        if (props.tripType === 'one-way') {
+        if (props.tripType === 'one_way') {
             props.onClick(props.outBoundFlight);
-        } else if (props.tripType === 'round-trip') {
+        } else if (props.tripType === 'round_trip') {
             props.onClick({ 
                 outbound: props.outBoundFlight, 
                 return: props.returnFlight 

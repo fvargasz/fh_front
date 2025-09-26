@@ -6,8 +6,12 @@ export const useAuth = () => {
   const user = useState('auth.user', () => null)
   const isLoggedIn = computed(() => !!user.value)
   const isInitialized = useState('auth.initialized', () => false)
+  const loading = useState('auth.loading', () => false)
+  const hasConnectionError = useState('auth.connectionError', () => false)
 
   const initializeAuth = async () => {
+    loading.value = true
+
     if (isInitialized.value) return;
     const config = useRuntimeConfig();
 
@@ -24,15 +28,22 @@ export const useAuth = () => {
 
             user.value = response.data.user;
             axios.defaults.headers.common['Authorization'] = `Bearer ${token.value}`;
+            loading.value = false;
+            hasConnectionError.value = false;
         
         } catch (error) {
+            hasConnectionError.value = true;
+            console.log('hasConnectionError set to:', hasConnectionError);
             token.value = null
             user.value = null
             delete axios.defaults.headers.common['Authorization']
+            loading.value = false;
+            throw error;
         }
 
     }
     isInitialized.value = true
+    loading.value = false;
   }
 
   const login = async (credentials) => {
@@ -87,13 +98,21 @@ export const useAuth = () => {
         }
     }
 
+  const retryConnection = async () => {
+    isInitialized.value = false;
+    await initializeAuth();
+  }
+
   return {
     user: readonly(user),
     isLoggedIn,
     isInitialized,
+    loading,
+    hasConnectionError,
     initializeAuth,
     login,
     logout,
-    register
+    register,
+    retryConnection
   }
 }

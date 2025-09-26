@@ -7,7 +7,7 @@ export const fetchFlights = async (body: any) : Promise<any[]> => {
     const response = await axios.post(
     config.public.API_BASE_URL+"/flight/flights", body );
 
-    if (body.tripType === 'round-trip') {
+    if (body.tripType === 'round_trip') {
         console.log('Round-trip response data:', response.data);
         return response.data.trips;
     }

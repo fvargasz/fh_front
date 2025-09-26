@@ -6,6 +6,5 @@ export const fetchAirports = async () : Promise<Airport[]> => {
     const response = await axios.post(
         config.public.API_BASE_URL+"/airports/all" );
 
-    console.log("Fetched airports:", response.data);
     return response.data as Airport[];
 }
