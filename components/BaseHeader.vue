@@ -1,4 +1,16 @@
-<script setup lang="ts">
+<script setup>
+
+const emit = defineEmits(['logUser']);
+
+const handleLogin = (formData) => {
+  console.log('Login data:', formData)
+  // Your login logic here
+}
+
+const handleRegister = (formData) => {
+  console.log('Register data:', formData)
+  // Your register logic here
+}
 
 </script>
 
@@ -33,11 +45,7 @@
         </NuxtLink>
 
         <!-- Button -->
-        <button
-          class="px-4 py-2 rounded-lg text-sm font-medium transition-colors bg-white text-black"
-        >
-          Sign In
-        </button>
+        <LoginMenu  @login="handleLogin" @register="handleRegister"/>
       </div>
     </nav>
   </header>

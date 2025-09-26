@@ -1,23 +1,10 @@
 <script setup lang="ts">
-import type { Flight } from '~/types/flight';
 
-  const flights : [Flight] = [
-    {
-      airline: "AC",
-      number: 301,
-      name: "Air Canada",
-      departure_airport: "YUL",
-      departure_time: "07:35",
-      arrival_airport: "YVR",
-      arrival_time: "10:05",
-      price: 273.23
-    }
-  ]
 </script>
 
 <template>
   <div class="bg-[url('/landingImg.jpg')] bg-cover bg-center bg-no-repeat min-h-screen">
-    <div class="absolute inset-0 bg-sky-primary/15"></div>
+    <div class="sticky inset-0 bg-sky-primary/15"></div>
     <BaseHeader/>
     <main class="flex-1 flex items-center justify-center px-4 py-12 z-10">
       <div class="container mx-auto max-w-6xl">
@@ -50,19 +37,6 @@ import type { Flight } from '~/types/flight';
 
           <div class="pt-8">
             <FlightSearchCard />
-          </div>
-        </div>
-
-        <div v-if="flights && flights.length > 0" class="p-4 mt-4
-          bg-white/60
-          backdrop-blur-sm rounded-md
-          pr-8">
-          <div class="flex items-center justify-between">
-            <h2 class="text-2xl font-bold text-foreground">{{ flights.length }} flight found</h2>
-            <p>One way</p>
-          </div>
-          <div v-for="flight in flights" class="flex flex-col">
-            <FlightInfoCard :flight="flight" />
           </div>
         </div>
       </div>
