@@ -19,15 +19,12 @@
 
           <div class="flex flex-wrap justify-center gap-4">
             <div class="flex items-center space-x-2 bg-cloud-white/20 backdrop-blur-sm rounded-full px-4 py-2">
-              <!-- <GlobeIcon class="h-5 w-5 text-cloud-white" /> -->
               <span class="text-cloud-white font-medium">Worldwide Coverage</span>
             </div>
             <div class="flex items-center space-x-2 bg-cloud-white/20 backdrop-blur-sm rounded-full px-4 py-2">
-              <!-- <ClockIcon class="h-5 w-5 text-cloud-white" /> -->
               <span class="text-cloud-white font-medium">Timezone Smart</span>
             </div>
             <div class="flex items-center space-x-2 bg-cloud-white/20 backdrop-blur-sm rounded-full px-4 py-2">
-              <!-- <PlaneIcon class="h-5 w-5 text-cloud-white" /> -->
               <span class="text-cloud-white font-medium">Best Prices</span>
             </div>
           </div>
@@ -71,6 +68,8 @@
                   :trip-type="trip.trip_type"
                   :returnFlight="trip.trip_type === 'round_trip' ? trip.segments[1]!.flight : undefined"
                   :owned-flight="true"
+                  :outboundDate="formatDate(trip.segments[0]!.flight_date)"
+                  :returnDate="trip.trip_type === 'round_trip' ? formatDate(trip.segments[1]!.flight_date) : undefined"
                 />
               </div>
           </div>
@@ -105,5 +104,10 @@ import type { Trip } from '~/types/Trip';
     }
 }
 
+function formatDate(dateStr: string): string {
+  const date = new Date(dateStr)
+  return date.toLocaleDateString("en-GB")
+    .replace(/\//g, "-")        
+}
 
 </script>

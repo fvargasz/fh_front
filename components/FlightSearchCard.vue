@@ -218,6 +218,16 @@ const tripItems = [
   { label: 'One Way', value: 'one_way' }
 ]
 
+function setTripType(type: 'one_way' | 'round_trip') {
+  tripType.value = type;
+  flights.value = [];
+  tripOptions.value = [];
+  userTriedToBook.value = false;
+  showTrips.value = false;
+  searchData.returnDate = '';
+  errorMessage.value = '';
+}
+
 const getTripType = (): string =>
   tripItems.find(trip => trip.value === tripType.value)?.label || ""
 
@@ -309,15 +319,6 @@ onMounted(async () => {
   airports.value = await fetchAirports();
 });
 
-function setTripType(type: 'one_way' | 'round_trip') {
-  tripType.value = type;
-  flights.value = [];
-  tripOptions.value = [];
-  userTriedToBook.value = false;
-  showTrips.value = false;
-  searchData.returnDate = '';
-  errorMessage.value = '';
-}
 
 const onSelectPressed = async (trip: any) => {
   
@@ -381,7 +382,7 @@ const onSelectPressed = async (trip: any) => {
     const result = await createTrip(body);
     clearFields();
   } catch (error) {
-    errorMessage.value = 'Error fetching flights. Please try agaddfain.';
+    errorMessage.value = 'Error processing trip.';
     console.error('Error creating trip:', error);
   }
 }

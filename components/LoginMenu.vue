@@ -10,7 +10,6 @@
     >
       Sign In
       <slot name="chevron">
-        <!-- Default chevron if no slot provided -->
         <span class="h-4 w-4 transition-transform duration-200" :class="{ 'rotate-180': isOpen }">▼</span>
       </slot>
     </button>
@@ -183,7 +182,6 @@ const toggleDropdown = () => {
 }
 
 const handleBlur = (event) => {
-  // Close dropdown when clicking outside
   setTimeout(() => {
     if (!event.relatedTarget || !event.relatedTarget.closest('.relative')) {
       isOpen.value = false
@@ -229,7 +227,6 @@ const handleRegister = async () => {
   }
 }
 
-// Close dropdown when clicking outside
 const handleClickOutside = (event) => {
   if (!event.target.closest('.relative')) {
     isOpen.value = false
@@ -238,7 +235,7 @@ const handleClickOutside = (event) => {
 
 const onSwitchTab = (tab) => {
   activeTab.value = tab;
-  errorMessage.value = ''; // Clear error message when switching tabs
+  errorMessage.value = ''; 
 };
 
 onMounted(() => {

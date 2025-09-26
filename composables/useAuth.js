@@ -1,7 +1,6 @@
 import axios from "axios";
 
 export const useAuth = () => {
-  // Authentication logic here
 
   const user = useState('auth.user', () => null)
   const isLoggedIn = computed(() => !!user.value)
@@ -80,7 +79,6 @@ export const useAuth = () => {
   const register = async (userInfo) => {
         try {
             const config = useRuntimeConfig()
-        // Your registration API call
         const { data } = await axios.post(config.public.API_BASE_URL+ "/users/create", userInfo);
         user.value = data.user;
 

@@ -13,7 +13,7 @@
                 </div>
                 <div class="items-center text-left">
                     <p class="font-semibold ">{{outBoundFlight.airline.name}}</p>
-                    <p class="text-gray-500">Flight {{outBoundFlight.airline.code }} {{outBoundFlight.number }}</p>
+                    <p class="text-gray-500">Flight {{outBoundFlight.airline.code }} {{outBoundFlight.number }}{{ outboundDate ? " ---- " + outboundDate : '' }}</p>
                 </div>
             </div>
             <div class="flex items-center flex-row space-x-4">
@@ -50,7 +50,7 @@
                 </div>
                 <div class="items-center text-left">
                     <p class="font-semibold ">{{returnFlight.airline.name}}</p>
-                    <p class="text-gray-500">Flight {{returnFlight.airline.code }} {{returnFlight.number }}</p>
+                    <p class="text-gray-500">Flight {{returnFlight.airline.code }} {{returnFlight.number }}{{ returnDate ? " ---- " + returnDate : '' }}</p>
                 </div>
             </div>
             <div class="flex items-center flex-row space-x-4">
@@ -110,6 +110,8 @@ const props = withDefaults(defineProps<{
     tripType: string,
     ownedFlight: boolean,
     onClick?: (data: Flight | any) => Promise<void>,
+    outboundDate?: string,
+    returnDate?: string,
 }>(), {
     ownedFlight: false,
 })
@@ -121,10 +123,9 @@ const duration = (flight: Flight): string => {
   const startMinutes = startH * 60 + startM;
   const endMinutes = endH * 60 + endM;
 
-  // Handle flights that cross midnight
   let diffMinutes = endMinutes - startMinutes;
   if (diffMinutes < 0) {
-    diffMinutes += 24 * 60; // add 24 hours
+    diffMinutes += 24 * 60; 
   }
 
   const hours = Math.floor(diffMinutes / 60);
