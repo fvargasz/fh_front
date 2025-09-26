@@ -1,18 +1,3 @@
-<script setup>
-
-const emit = defineEmits(['logUser']);
-
-const handleLogin = (formData) => {
-  console.log('Login data:', formData)
-  // Your login logic here
-}
-
-const handleRegister = (formData) => {
-  console.log('Register data:', formData)
-  // Your register logic here
-}
-
-</script>
 
 <template>
   <header class="w-full px-4 py-6">
@@ -25,7 +10,7 @@ const handleRegister = (formData) => {
 
       <!-- Nav Links -->
       <div class="hidden md:flex items-center space-x-6">
-        <NuxtLink
+        <!-- <NuxtLink
           to="#"
           class=" hover:opacity-90 transition-colors"
         >
@@ -42,12 +27,33 @@ const handleRegister = (formData) => {
           class=" hover:opacity-90 transition-colors"
         >
           Help
-        </NuxtLink>
+        </NuxtLink> -->
 
         <!-- Button -->
-        <LoginMenu  @login="handleLogin" @register="handleRegister"/>
+        <LoginMenu v-if="!isLoggedIn" @login="handleLogin" @register="handleRegister"/>
+        <div v-else class="flex items-center space-x-4">
+          <span class="hover:opacity-90 transition-colors">Hello, {{ user.name }}</span>
+          <Button @click="useAuth().logout" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md">
+            Logout
+          </Button>
+        </div>
       </div>
     </nav>
   </header>
 </template>
 
+<script setup>
+
+const { user, isLoggedIn } = useAuth();
+
+const handleLogin = (formData) => {
+  console.log('Login data:', formData)
+  // Your login logic here
+}
+
+const handleRegister = (formData) => {
+  console.log('Register data:', formData)
+  // Your register logic here
+}
+
+</script>
