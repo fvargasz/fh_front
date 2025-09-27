@@ -1,75 +1,140 @@
-# Nuxt Minimal Starter
+# Project Setup Guide
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+## Prerequisites
 
-## Setup
+Before running this project, ensure you have the following software installed on your system:
 
-Make sure to install dependencies:
+- **Node.js** (version 16.x or higher recommended)
+- **npm** (comes with Node.js) or alternative package managers (pnpm, yarn, bun)
+- **Git** (for cloning the repository)
+
+### Verify Installation
+
+Check if the required tools are properly installed by running:
 
 ```bash
-# npm
+node --version
+npm --version
+git --version
+```
+
+## Environment Configuration
+
+### Required Environment Variables
+
+After cloning the project, you must create a `.env` file in the root directory with the following configuration:
+
+```bash
+API_BASE_URL=your_backend_api_url
+```
+
+**Example Configuration:**
+```bash
+API_BASE_URL=http://127.0.0.1:8000/api
+```
+
+> **Note:** This example uses a local development backend. Replace with your actual backend URL. For reference, this project integrates with [this backend implementation](https://github.com/fvargasz/fh_back).
+
+## Installation
+
+### 1. Clone the Repository
+
+```bash
+git clone <repository-url>
+cd <project-directory>
+```
+
+### 2. Install Dependencies
+
+Choose your preferred package manager:
+
+```bash
+# Using npm (recommended)
 npm install
 
-# pnpm
+# Using pnpm
 pnpm install
 
-# yarn
+# Using yarn
 yarn install
 
-# bun
+# Using bun
 bun install
 ```
 
-## Development Server
+## Development
 
-Start the development server on `http://localhost:3000`:
+### Start Development Server
+
+Launch the development server on `http://localhost:3000`:
 
 ```bash
-# npm
+# Using npm
 npm run dev
 
-# pnpm
+# Using pnpm
 pnpm dev
 
-# yarn
+# Using yarn
 yarn dev
 
-# bun
+# Using bun
 bun run dev
 ```
 
-## Production
+The application will be available at [http://localhost:3000](http://localhost:3000) with hot-reload enabled for development.
 
-Build the application for production:
+## Production Deployment
+
+### Build for Production
+
+Generate the production build:
 
 ```bash
-# npm
+# Using npm
 npm run build
 
-# pnpm
+# Using pnpm
 pnpm build
 
-# yarn
+# Using yarn
 yarn build
 
-# bun
+# Using bun
 bun run build
 ```
 
-Locally preview production build:
+### Preview Production Build
+
+Test the production build locally:
 
 ```bash
-# npm
+# Using npm
 npm run preview
 
-# pnpm
+# Using pnpm
 pnpm preview
 
-# yarn
+# Using yarn
 yarn preview
 
-# bun
+# Using bun
 bun run preview
 ```
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+## Additional Resources
+
+- **Nuxt.js Documentation:** [Getting Started Guide](https://nuxt.com/docs/getting-started/introduction)
+- **Deployment Guide:** [Nuxt Deployment Documentation](https://nuxt.com/docs/getting-started/deployment)
+
+## Troubleshooting
+
+### Common Issues
+
+- **Port 3000 already in use:** Kill the process using the port or specify a different port
+- **Module not found errors:** Delete `node_modules` and `package-lock.json`, then reinstall dependencies
+- **Environment variables not loading:** Ensure the `.env` file is in the root directory and properly formatted
+
+### Getting Help
+
+If you encounter issues not covered in this guide, please refer to the [Nuxt.js documentation](https://nuxt.com/docs) or check the project's issue tracker.
