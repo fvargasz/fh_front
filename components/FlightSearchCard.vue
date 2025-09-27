@@ -271,7 +271,8 @@ async function handleSearch()  {
 
   try {
     const flightOptions = await fetchFlights(body);
-
+    
+      console.log('one_way flights:', flights.value);
     if (tripType.value === 'one_way') {
       flights.value = flightOptions as Flight[];
       console.log('one_way flights:', flights.value);
@@ -280,8 +281,10 @@ async function handleSearch()  {
       console.log('round_trip options:', tripOptions.value);
     }
     showTrips.value = true;
-  } catch (error) {
-    errorMessage.value = 'Error fetching flights. Please try again.';
+  } catch (error : any) {
+    console.log(error)
+    errorMessage.value = error.response.data.error;
+    ;
   }
   
 }
@@ -292,7 +295,6 @@ const handleDepartureChange = () => {
     const selectedAirport = airports.value.find(airport => airport.code === searchData.from);
     if (selectedAirport) {
       departureAirport.value = selectedAirport;
-      console.log('Departure airport set to:', selectedAirport);
     }
   }
 };
@@ -302,7 +304,6 @@ const handleArrivalChange = () => {
     const selectedAirport = airports.value.find(airport => airport.code === searchData.to);
     if (selectedAirport) {
       arrivalAirport.value = selectedAirport;
-      console.log('Arrival airport set to:', selectedAirport);
     }
   }
 };
